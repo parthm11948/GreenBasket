@@ -21,7 +21,7 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: "https://green-basket-two.vercel.app/",
+    origin: "https://green-basket-two.vercel.app", // Removed trailing slash for CORS stability
     credentials: true,
   })
 );
@@ -40,23 +40,20 @@ app.use((req, res) => {
   res.status(404).json({ message: "Route not found on server" });
 });
 
-const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI;
 
 if (!MONGO_URI) {
   console.error("❌ Error: MONGO_URI is not defined in .env file");
-  process.exit(1);
+} else {
+  mongoose
+    .connect(MONGO_URI)
+    .then(() => {
+      console.log("✅ MongoDB Connected");
+    })
+    .catch((err) => {
+      console.error("❌ DB Connection Error:", err.message);
+    });
 }
 
-mongoose
-  .connect(MONGO_URI)
-  .then(() => {
-    console.log("✅ MongoDB Connected");
-    app.listen(PORT, () =>
-      console.log(`🚀 Server running on port ${PORT}`)
-    );
-  })
-  .catch((err) => {
-    console.error("❌ DB Connection Error:", err.message);
-    process.exit(1);
-  });
+// 6️⃣ Vercel Export (This replaces app.listen for Serverless)
+export default app;
