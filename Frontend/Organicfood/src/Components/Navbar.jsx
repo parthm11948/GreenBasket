@@ -442,7 +442,7 @@ const Navbar = ({ cartCount = 0, cartItems = [] }) => {
                   ) : (
                     <div className="flex gap-2">
                        <Link to="/login" onClick={() => setIsOpen(false)} className="flex-1 py-3 bg-green-500 text-white text-xs font-black uppercase rounded-xl text-center">Login</Link>
-                       <Link to="/registration" onClick={() => setIsOpen(false)} className="flex-1 py-3 bg-gray-100 text-gray-900 text-xs font-black uppercase rounded-xl text-center">Join</Link>
+                       <Link to="/registration" onClick={() => setIsOpen(false)} className="flex-1 py-3 bg-gray-100 text-gray-900 text-xs font-black uppercase rounded-xl text-center">Registration</Link>
                     </div>
                   )}
                 </div>
