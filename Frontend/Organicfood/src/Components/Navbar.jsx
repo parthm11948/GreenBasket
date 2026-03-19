@@ -132,7 +132,6 @@ const Navbar = ({ cartCount = 0, cartItems = [] }) => {
     navigate("/");
   };
 
-  // UPDATED: Now gets the first letter of the Name instead of Email
   const getNameInitial = () => {
     const name = user?.fullName || user?.name || "";
     if (!name) return "";
@@ -153,22 +152,22 @@ const Navbar = ({ cartCount = 0, cartItems = [] }) => {
         }`}
         style={{ backgroundColor: softApricot }}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 text-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 text-gray-800">
           <div
             className={`flex justify-between items-center transition-all duration-500 ${
-              scrolled ? "h-16" : "h-24"
+              scrolled ? "h-16" : "h-20 md:h-24"
             }`}
           >
             {/* Logo */}
-            <Link to="/" className="flex-shrink-0 flex items-center gap-3 group">
+            <Link to="/" className="flex-shrink-0 flex items-center gap-2 sm:gap-3 group">
               <motion.div
                 whileHover={{ rotate: 15 }}
                 style={{ backgroundColor: springGreen }}
-                className="p-2.5 rounded-2xl text-white"
+                className="p-2 sm:p-2.5 rounded-xl sm:rounded-2xl text-white"
               >
-                <ShoppingBasket size={24} />
+                <ShoppingBasket size={20} />
               </motion.div>
-              <span className="text-xl sm:text-2xl font-black tracking-tighter">
+              <span className="text-lg sm:text-2xl font-black tracking-tighter">
                 Green<span style={{ color: springGreen }}>Basket</span>
               </span>
             </Link>
@@ -274,9 +273,8 @@ const Navbar = ({ cartCount = 0, cartItems = [] }) => {
               </div>
             </div>
 
-            {/* Right actions */}
+            {/* Desktop Right actions */}
             <div className="hidden md:flex items-center gap-4">
-              {/* USER DROPDOWN */}
               <div className="relative" ref={userRef}>
                 <button
                   onClick={(e) => {
@@ -324,7 +322,6 @@ const Navbar = ({ cartCount = 0, cartItems = [] }) => {
                               {user.email}
                             </p>
                           </div>
-
                           <Link
                             to="/profile"
                             onClick={() => setUserOpen(false)}
@@ -338,7 +335,6 @@ const Navbar = ({ cartCount = 0, cartItems = [] }) => {
                               <p className="text-[10px] font-bold text-gray-400 uppercase">View & Edit Profile</p>
                             </div>
                           </Link>
-
                           <button
                             onClick={handleLogout}
                             className="w-full text-left px-7 py-5 hover:bg-red-50 transition flex items-center gap-4 group/logout"
@@ -375,7 +371,6 @@ const Navbar = ({ cartCount = 0, cartItems = [] }) => {
                 </AnimatePresence>
               </div>
 
-              {/* Cart Button */}
               <button
                 onClick={() => navigate("/checkout")}
                 style={{ backgroundColor: springGreen }}
@@ -386,18 +381,32 @@ const Navbar = ({ cartCount = 0, cartItems = [] }) => {
             </div>
 
             {/* Mobile Controls */}
-            <div className="md:hidden flex items-center gap-3">
+            <div className="md:hidden flex items-center gap-2 sm:gap-3">
+              {/* Mobile Cart Short-access */}
+              <button
+                onClick={() => navigate("/checkout")}
+                className="p-2.5 bg-white/50 rounded-xl text-gray-800 relative"
+              >
+                <ShoppingBasket size={22} />
+                {cartCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-green-500 text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-bold">
+                    {cartCount}
+                  </span>
+                )}
+              </button>
+
               <button
                 onClick={() => setPlannerOpen(!plannerOpen)}
-                className="p-2 bg-white/30 rounded-full"
+                className="p-2.5 bg-white/50 rounded-xl"
               >
-                <Sparkles size={20} style={{ color: "green" }} />
+                <Sparkles size={22} style={{ color: "green" }} />
               </button>
+
               <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="p-2.5 bg-white/30 rounded-2xl"
+                className="p-2.5 bg-gray-900 text-white rounded-xl"
               >
-                {isOpen ? <X size={24} /> : <Menu size={24} />}
+                {isOpen ? <X size={22} /> : <Menu size={22} />}
               </button>
             </div>
           </div>
@@ -410,26 +419,53 @@ const Navbar = ({ cartCount = 0, cartItems = [] }) => {
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              className="md:hidden bg-white border-t border-gray-100 overflow-hidden text-center"
+              className="md:hidden bg-white border-t border-gray-100 overflow-hidden shadow-inner"
             >
-              <div className="flex flex-col p-6 space-y-4">
+              <div className="flex flex-col p-6 space-y-5">
+                {/* User Section for Mobile */}
+                <div className="pb-4 border-b border-gray-50">
+                  {user ? (
+                    <div className="flex items-center gap-4">
+                       <div
+                        style={{ backgroundColor: springGreen }}
+                        className="w-12 h-12 rounded-2xl flex items-center justify-center text-white font-black text-lg uppercase shadow-md"
+                      >
+                        {getNameInitial()}
+                      </div>
+                      <div className="text-left">
+                        <p className="text-sm font-black text-gray-900 truncate">
+                          {user.fullName || user.name || "Member"}
+                        </p>
+                        <button onClick={handleLogout} className="text-xs font-bold text-red-500 uppercase tracking-tighter">Sign Out</button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex gap-2">
+                       <Link to="/login" onClick={() => setIsOpen(false)} className="flex-1 py-3 bg-green-500 text-white text-xs font-black uppercase rounded-xl text-center">Login</Link>
+                       <Link to="/registration" onClick={() => setIsOpen(false)} className="flex-1 py-3 bg-gray-100 text-gray-900 text-xs font-black uppercase rounded-xl text-center">Join</Link>
+                    </div>
+                  )}
+                </div>
+
+                {/* Nav Links */}
                 {navLinks.map((link) => (
                   <Link
                     key={link.name}
                     to={link.href}
                     onClick={() => setIsOpen(false)}
-                    className="font-bold text-gray-600 uppercase tracking-widest text-sm"
+                    className="font-black text-gray-700 uppercase tracking-[0.15em] text-sm py-2"
                   >
                     {link.name}
                   </Link>
                 ))}
+                
                 {user && (
-                   <Link
+                  <Link
                     to="/profile"
                     onClick={() => setIsOpen(false)}
-                    className="font-bold text-green-500 uppercase tracking-widest text-sm"
+                    className="font-black text-green-500 uppercase tracking-[0.15em] text-sm py-2"
                   >
-                    My Profile
+                    My Account
                   </Link>
                 )}
               </div>
