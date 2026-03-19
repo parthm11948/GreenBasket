@@ -9,7 +9,7 @@ const BuyNowDetails = () => {
 
   const { product, items, amount } = location.state || {};
   const displayItems = product ? [product] : items || [];
-  const BACKEND_URL = "http://localhost:5000/api/delivery";
+  const BACKEND_URL = "https://green-basket-ud3o.vercel.app/api/delivery";
 
   const [addressData, setAddressData] = useState({ fullName: "", phone: "", address: "" });
   const [oldAddresses, setOldAddresses] = useState([]);

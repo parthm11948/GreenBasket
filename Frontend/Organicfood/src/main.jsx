@@ -5,7 +5,7 @@ import App from "./App.jsx";
 import axios from "axios";
 
 // ✅ Set backend base URL
-axios.defaults.baseURL = "http://localhost:5000";
+axios.defaults.baseURL = "https://green-basket-ud3o.vercel.app/";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
