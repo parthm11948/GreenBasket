@@ -6,53 +6,48 @@ import dotenv from "dotenv";
 // 1️⃣ Load config
 dotenv.config();
 
-// 2️⃣ Route Imports (Matching your exact filenames: image_321e59.png)
+// 2️⃣ Route Imports (Matching your filenames EXACTLY)
 import authRoutes from "./routes/authRoute.js";
 import productRoutes from "./routes/productroute.js"; 
 import cartRoutes from "./routes/cartRoute.js";
 import contactRoutes from "./routes/contactRoute.js";
-import orderRoutes from "./routes/orderRoutes.js"; 
-import deliveryRoutes from "./routes/deliveryRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js"; // Plural 's'
+import deliveryRoutes from "./routes/deliveryRoutes.js"; // Plural 's'
 
 const app = express();
 
 // 3️⃣ Middlewares
 app.use(express.json());
-app.use(
-  cors({
-    origin: "https://green-basket-two.vercel.app",
-    credentials: true,
-  })
-);
+app.use(cors({
+  origin: "https://green-basket-two.vercel.app",
+  credentials: true,
+}));
 
-// 4️⃣ Database Connection (Serverless Optimized)
+// 4️⃣ Database Connection
 const MONGO_URI = process.env.MONGO_URI;
 
 const connectDB = async () => {
   if (mongoose.connection.readyState >= 1) return;
-  
   if (!MONGO_URI) {
-    console.error("❌ CRITICAL: MONGO_URI missing in Environment Variables");
+    console.error("❌ MONGO_URI missing in Environment Variables");
     return;
   }
-
   try {
     await mongoose.connect(MONGO_URI);
-    console.log("✅ MongoDB Connected Successfully");
+    console.log("✅ MongoDB Connected");
   } catch (err) {
     console.error("❌ MongoDB Connection Failed:", err.message);
   }
 };
 
-// Middleware to ensure DB connection on every request
 app.use(async (req, res, next) => {
   await connectDB();
   next();
 });
 
-// 5️⃣ Health Check Route
+// 5️⃣ Health Check (Visit your URL to see this)
 app.get('/', (req, res) => {
-    res.status(200).send('Green-Basket Backend API is running successfully! 🚀');
+    res.status(200).send('Green-Basket Backend is LIVE 🚀');
 });
 
 // 6️⃣ API Routes
@@ -66,22 +61,13 @@ app.use("/api/delivery", deliveryRoutes);
 // 7️⃣ Global Error Handler
 app.use((err, req, res, next) => {
   console.error("💥 SERVER ERROR:", err.stack);
-  res.status(500).json({
-    success: false,
-    message: err.message || "Internal Server Error",
-    error: process.env.NODE_ENV === 'development' ? err : {}
-  });
+  res.status(500).json({ success: false, message: err.message });
 });
 
-// 8️⃣ Local Development Support
-// This allows Nodemon to keep the server running locally, 
-// but Vercel will ignore it and use the export instead.
+// 8️⃣ Support for local Nodemon
 if (process.env.NODE_ENV !== 'production') {
     const PORT = process.env.PORT || 5000;
-    app.listen(PORT, () => {
-        console.log(`🚀 Local Server running on http://localhost:${PORT}`);
-    });
+    app.listen(PORT, () => console.log(`Local server on port ${PORT}`));
 }
 
-// 9️⃣ Export for Vercel
 export default app;
