@@ -18,7 +18,7 @@ const Product = ({ addToCart }) => {
   const categories = ["All", "Vegetables", "Fruits", "Dairy", "Dry Fruits", "Vegetable Juice", "Fruit Juice"];
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/products?category=${encodeURIComponent(filter)}&search=${searchQuery}`)
+    fetch(`https://green-basket-ttmn.vercel.app/api/products?category=${encodeURIComponent(filter)}&search=${searchQuery}`)
       .then((res) => res.json())
       .then((data) => setProducts(data))
       .catch((err) => console.error(err));
@@ -26,7 +26,7 @@ const Product = ({ addToCart }) => {
 
   const handleAddToCart = async (product, qty = 1) => {
     try {
-      const response = await fetch("http://localhost:5000/api/cart/add", {
+      const response = await fetch("https://green-basket-ttmn.vercel.app/api/cart/add", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
