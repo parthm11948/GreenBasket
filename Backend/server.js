@@ -6,13 +6,13 @@ import dotenv from "dotenv";
 // 1️⃣ Load config
 dotenv.config();
 
-// 2️⃣ Route Imports (Matching your case-sensitive filenames)
+// 2️⃣ Route Imports (FIXED TO MATCH YOUR SCREENSHOT FILENAMES)
 import authRoutes from "./routes/authRoute.js";
-import productRoutes from "./routes/productroute.js"; 
+import productRoutes from "./routes/productroute.js"; // Match: productroute.js
 import cartRoutes from "./routes/cartRoute.js";
 import contactRoutes from "./routes/contactRoute.js";
-import orderRoutes from "./routes/orderRoute.js"; 
-import deliveryRoutes from "./routes/deliveryRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";    // FIXED: Added 's' to match your file
+import deliveryRoutes from "./routes/deliveryRoutes.js"; // FIXED: Added 's' to match your file
 
 const app = express();
 
@@ -32,7 +32,7 @@ const connectDB = async () => {
   if (mongoose.connection.readyState >= 1) return;
   
   if (!MONGO_URI) {
-    console.error("❌ CRITICAL: MONGO_URI missing in Environment Variables");
+    console.error("❌ CRITICAL: MONGO_URI missing in Vercel Environment Variables");
     return;
   }
 
@@ -74,7 +74,6 @@ app.use((err, req, res, next) => {
   res.status(500).json({
     success: false,
     message: err.message || "Internal Server Error",
-    // Only show full error details if we are NOT in production
     error: process.env.NODE_ENV === 'development' ? err : {}
   });
 });
