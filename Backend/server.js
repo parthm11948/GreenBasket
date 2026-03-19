@@ -51,7 +51,7 @@ app.get('/', (req, res) => {
 });
 
 // 6️⃣ API Routes
-app.use("/api/auth", authRoutes);
+app.use("/api/auth",authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/contact", contactRoutes);
