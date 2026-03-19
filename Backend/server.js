@@ -6,13 +6,13 @@ import dotenv from "dotenv";
 // 1️⃣ Load config
 dotenv.config();
 
-// 2️⃣ Route Imports (FIXED TO MATCH YOUR SCREENSHOT FILENAMES)
+// 2️⃣ Route Imports (Matching your exact filenames: image_321e59.png)
 import authRoutes from "./routes/authRoute.js";
-import productRoutes from "./routes/productroute.js"; // Match: productroute.js
+import productRoutes from "./routes/productroute.js"; 
 import cartRoutes from "./routes/cartRoute.js";
 import contactRoutes from "./routes/contactRoute.js";
-import orderRoutes from "./routes/orderRoutes.js";    // FIXED: Added 's' to match your file
-import deliveryRoutes from "./routes/deliveryRoutes.js"; // FIXED: Added 's' to match your file
+import orderRoutes from "./routes/orderRoutes.js"; 
+import deliveryRoutes from "./routes/deliveryRoutes.js";
 
 const app = express();
 
@@ -32,7 +32,7 @@ const connectDB = async () => {
   if (mongoose.connection.readyState >= 1) return;
   
   if (!MONGO_URI) {
-    console.error("❌ CRITICAL: MONGO_URI missing in Vercel Environment Variables");
+    console.error("❌ CRITICAL: MONGO_URI missing in Environment Variables");
     return;
   }
 
@@ -50,9 +50,9 @@ app.use(async (req, res, next) => {
   next();
 });
 
-// 5️⃣ Health Check Route (Backend is running)
+// 5️⃣ Health Check Route
 app.get('/', (req, res) => {
-    res.status(200).send('Green-Basket Backend API running... 🚀');
+    res.status(200).send('Green-Basket Backend API is running successfully! 🚀');
 });
 
 // 6️⃣ API Routes
@@ -63,12 +63,7 @@ app.use("/api/contact", contactRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/delivery", deliveryRoutes);
 
-// 7️⃣ Catch-all for 404 Errors
-app.use((req, res) => {
-  res.status(404).json({ success: false, message: "Route not found on server" });
-});
-
-// 8️⃣ GLOBAL ERROR HANDLER
+// 7️⃣ Global Error Handler
 app.use((err, req, res, next) => {
   console.error("💥 SERVER ERROR:", err.stack);
   res.status(500).json({
@@ -77,6 +72,16 @@ app.use((err, req, res, next) => {
     error: process.env.NODE_ENV === 'development' ? err : {}
   });
 });
+
+// 8️⃣ Local Development Support
+// This allows Nodemon to keep the server running locally, 
+// but Vercel will ignore it and use the export instead.
+if (process.env.NODE_ENV !== 'production') {
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () => {
+        console.log(`🚀 Local Server running on http://localhost:${PORT}`);
+    });
+}
 
 // 9️⃣ Export for Vercel
 export default app;
