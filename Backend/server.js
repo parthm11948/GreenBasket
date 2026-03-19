@@ -3,53 +3,45 @@ import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 
-// 1️⃣ Load config
 dotenv.config();
 
-// 2️⃣ Route Imports - FIXED TO MATCH YOUR FILENAMES EXACTLY
+// Route Imports - Triple check these filenames!
 import authRoutes from "./routes/authRoute.js";
-import productRoutes from "./routes/productroute.js"; // Match: productroute.js (lowercase)
+import productRoutes from "./routes/productroute.js"; 
 import cartRoutes from "./routes/cartRoute.js";
 import contactRoutes from "./routes/contactRoute.js";
-import orderRoutes from "./routes/orderRoutes.js";    // Double check if this file has an 's' or not!
+import orderRoutes from "./routes/orderRoute.js"; // Removed 's' to match common naming
 import deliveryRoutes from "./routes/deliveryRoutes.js";
 
 const app = express();
 
-// 3️⃣ Database Connection (Serverless Optimized)
+app.use(express.json());
+app.use(cors({
+  origin: "https://green-basket-two.vercel.app",
+  credentials: true,
+}));
+
+// Database Connection with explicit error handling
 const connectDB = async () => {
   if (mongoose.connection.readyState >= 1) return;
-
+  
   const uri = process.env.MONGO_URI;
-  if (!uri) {
-    console.error("❌ MONGO_URI is missing in Vercel Environment Variables");
-    return;
-  }
+  if (!uri) throw new Error("Missing MONGO_URI");
 
-  try {
-    await mongoose.connect(uri);
-    console.log("✅ MongoDB Connected");
-  } catch (err) {
-    console.error("❌ DB Connection Error:", err.message);
-  }
+  await mongoose.connect(uri);
 };
 
-// 4️⃣ Middlewares
-app.use(express.json());
-app.use(
-  cors({
-    origin: "https://green-basket-two.vercel.app",
-    credentials: true,
-  })
-);
-
-// DB Connection Middleware
+// Middleware to prevent timeout
 app.use(async (req, res, next) => {
-  await connectDB();
-  next();
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    console.error("Database Error:", err.message);
+    res.status(500).json({ error: "Database connection failed" });
+  }
 });
 
-// 5️⃣ API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
@@ -57,15 +49,6 @@ app.use("/api/contact", contactRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/delivery", deliveryRoutes);
 
-// Root route for Vercel health check
-app.get("/", (req, res) => {
-  res.send("Green Basket Server is Live");
-});
+app.get("/", (req, res) => res.send("API Active"));
 
-// 6️⃣ Catch-all for 404 Errors
-app.use((req, res) => {
-  res.status(404).json({ message: "Route not found on server" });
-});
-
-// 7️⃣ Export for Vercel
 export default app;
