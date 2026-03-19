@@ -50,7 +50,7 @@ const Profile = () => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.put(
-        "https://green-basket-ttmn.vercel.app/api/auth/update-profile",
+        "http://localhost:5000/api/auth/update-profile",
         {
           email: user.email,
           fullName: editData.name,

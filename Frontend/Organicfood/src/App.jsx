@@ -23,7 +23,7 @@ import Profile from "./Pages/Profile";
 import Forgot from "./Pages/Forgot";
 import AllOrders from "./Pages/AllOrders"; 
 
-const API_URL = "https://green-basket-ttmn.vercel.app/api/cart";
+const API_URL = "http://localhost:5000/api/cart";
 
 function App() {
   const [cart, setCart] = useState([]);

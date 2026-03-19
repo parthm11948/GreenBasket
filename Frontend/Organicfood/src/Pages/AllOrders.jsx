@@ -37,10 +37,10 @@ const AllOrders = () => {
 
       // 2. Fetch Orders and Products simultaneously
       const [ordersRes, productsRes] = await Promise.all([
-        axios.get(`https://green-basket-ttmn.vercel.app/api/orders?userId=${userId}`, {
+        axios.get(`http://localhost:5000/api/orders?userId=${userId}`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
-        axios.get("https://green-basket-ttmn.vercel.app/api/products").catch(() => ({ data: [] }))
+        axios.get("http://localhost:5000/api/products").catch(() => ({ data: [] }))
       ]);
 
       // ✅ FIX: Flexible response handling (handles {orders: []} or just [])
