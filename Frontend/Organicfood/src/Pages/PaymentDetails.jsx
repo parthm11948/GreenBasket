@@ -204,14 +204,6 @@ const PaymentDetails = () => {
               >
                 {loading ? <Loader2 className="animate-spin" /> : "PLACE ORDER NOW"}
               </motion.button>
-
-              {/* FIXED CLOSE BUTTON */}
-              <button 
-                onClick={() => navigate(-1)}
-                className="w-full py-6 text-slate-400 font-bold text-xs sm:text-sm hover:text-slate-600 transition-colors uppercase tracking-widest active:scale-95 text-center mt-2"
-              >
-                Close
-              </button>
             </div>
           </div>
         </div>
