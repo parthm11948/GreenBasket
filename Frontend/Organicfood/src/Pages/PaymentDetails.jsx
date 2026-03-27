@@ -12,7 +12,6 @@ const PaymentDetails = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   
-  // State to track if payment method is selected
   const [selectedMethod, setSelectedMethod] = useState(null);
 
   const dbImage = orderPayload?.productImage || orderPayload?.image || orderPayload?.img;
@@ -76,8 +75,9 @@ const PaymentDetails = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F4F7F9] flex flex-col items-center p-4 sm:p-6 md:justify-center font-sans text-slate-800">
+    <div className="min-h-screen bg-[#F4F7F9] flex flex-col items-center p-4 sm:p-6 font-sans text-slate-800">
       
+      {/* Error Modal */}
       <AnimatePresence>
         {error && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
@@ -88,41 +88,41 @@ const PaymentDetails = () => {
               className="bg-white rounded-[2rem] p-6 sm:p-8 max-w-sm w-full text-center shadow-2xl"
             >
               <AlertCircle size={40} className="mx-auto text-red-500 mb-4" />
-              <h3 className="text-xl font-bold mb-2 text-slate-900">Payment Action Required</h3>
+              <h3 className="text-xl font-bold mb-2 text-slate-900">Notice</h3>
               <p className="text-slate-500 mb-8 text-sm leading-relaxed">{error}</p>
               <button 
                 onClick={() => setError(null)} 
                 className="w-full py-4 bg-[#1A1F2C] text-white font-bold rounded-xl shadow-lg active:scale-95 transition-transform"
               >
-                Understood
+                Close
               </button>
             </motion.div>
           </div>
         )}
       </AnimatePresence>
 
-      <div className="max-w-md w-full relative">
-        {/* Back Button */}
+      <div className="max-w-md w-full flex flex-col min-h-full">
+        {/* Navigation */}
         <button 
           onClick={() => navigate(-1)} 
-          className="mb-6 flex items-center gap-2 text-slate-400 font-semibold hover:text-slate-800 transition-colors group"
+          className="mb-4 flex items-center gap-2 text-slate-400 font-semibold hover:text-slate-800 transition-colors py-2"
         >
-          <ChevronLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
+          <ChevronLeft size={20} />
           <span>Back</span>
         </button>
 
-        {/* Order Card */}
-        <div className="bg-white rounded-[2rem] sm:rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden mb-6">
+        {/* Order Details Card */}
+        <div className="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden mb-6">
           <div className="p-6 sm:p-8">
-            <div className="flex items-center gap-3 mb-6 text-[#2B59FF]">
-              <ShoppingCart size={22} />
+            <div className="flex items-center gap-3 mb-6 sm:mb-8 text-[#2B59FF]">
+              <ShoppingCart size={24} />
               <h2 className="text-xl sm:text-2xl font-bold tracking-tight">Your Order</h2>
             </div>
 
-            <div className="mb-6">
-              <h3 className="text-xl sm:text-2xl font-black text-slate-900 leading-tight break-words">{productName}</h3>
-              <p className="text-xs sm:text-sm text-slate-400 mt-1 mb-4">Fresh and delivered daily.</p>
-              <div className="inline-flex items-center gap-3 sm:gap-4 bg-slate-50 px-3 py-2 rounded-xl text-xs sm:text-sm font-bold">
+            <div className="mb-6 sm:mb-8">
+              <h3 className="text-xl sm:text-2xl font-black text-slate-900 leading-tight">{productName}</h3>
+              <p className="text-sm text-slate-400 mt-1 mb-4">Fresh and delivered daily.</p>
+              <div className="inline-flex items-center gap-3 bg-slate-50 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold">
                 <span className="text-slate-900">₹{itemsTotal.toFixed(2)} /unit</span>
                 <span className="text-slate-200">|</span>
                 <span className="text-slate-500">Qty: 1</span>
@@ -131,8 +131,8 @@ const PaymentDetails = () => {
 
             <div className="h-[1px] w-full bg-slate-100 mb-6 border-dashed border-t border-slate-200"></div>
 
-            <div className="space-y-4">
-              <p className="text-[10px] font-black text-slate-300 uppercase tracking-[0.2em]">Order Summary</p>
+            <div className="space-y-4 sm:space-y-6">
+              <p className="text-[10px] font-black text-slate-300 uppercase tracking-[0.2em]">Summary</p>
 
               <div className="flex justify-between items-center bg-[#F8FAFC] p-4 rounded-2xl border border-slate-50">
                 <span className="text-slate-600 font-semibold text-sm sm:text-base">Items Total</span>
@@ -149,7 +149,7 @@ const PaymentDetails = () => {
 
               <div className="h-[1px] w-full bg-slate-100 border-dashed border-t border-slate-200"></div>
 
-              <div className="flex justify-between items-center px-2 py-2">
+              <div className="flex justify-between items-center px-2">
                 <span className="text-[10px] font-black text-slate-300 uppercase tracking-[0.2em]">Grand Total</span>
                 <span className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tighter">₹{grandTotal.toFixed(2)}</span>
               </div>
@@ -157,54 +157,59 @@ const PaymentDetails = () => {
           </div>
         </div>
 
-        {/* Payment Selection Area */}
-        <div className="space-y-4">
+        {/* Payment Selection & Actions */}
+        <div className="space-y-4 mt-auto">
           <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-2">Select Payment Method</p>
           
           <button
             onClick={() => setSelectedMethod('cod')}
-            className={`w-full p-4 sm:p-5 rounded-[1.5rem] sm:rounded-[2rem] border transition-all flex items-center justify-between shadow-sm active:scale-[0.98] ${
+            className={`w-full p-4 sm:p-5 rounded-[2rem] border transition-all flex items-center justify-between shadow-sm active:scale-[0.98] ${
               selectedMethod === 'cod' 
-              ? 'bg-white border-slate-900 ring-4 ring-slate-900/5' 
+              ? 'bg-white border-slate-900 ring-2 ring-slate-900/5' 
               : 'bg-white border-slate-100 opacity-80 hover:opacity-100'
             }`}
           >
             <div className="flex items-center gap-4">
-              <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl flex items-center justify-center transition-colors ${
-                selectedMethod === 'cod' ? 'bg-[#31E981] text-white shadow-lg shadow-[#31E981]/20' : 'bg-slate-100 text-slate-400'
+              <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center transition-colors ${
+                selectedMethod === 'cod' ? 'bg-[#31E981] text-white' : 'bg-slate-100 text-slate-400'
               }`}>
-                <Truck size={20} />
+                <Truck size={22} />
               </div>
               <div className="text-left">
                 <p className="font-bold text-slate-900 leading-tight text-sm sm:text-base">Cash on Delivery</p>
-                <p className="text-[9px] sm:text-[10px] text-slate-400 font-bold uppercase tracking-wide">Pay at your doorstep</p>
+                <p className="text-[9px] sm:text-[10px] text-slate-400 font-bold uppercase tracking-wide">Pay at doorstep</p>
               </div>
             </div>
             
             <div className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 flex items-center justify-center transition-all ${
               selectedMethod === 'cod' ? 'border-slate-900 bg-slate-900' : 'border-slate-200'
             }`}>
-              {selectedMethod === 'cod' && <Check size={12} className="text-white" />}
+              {selectedMethod === 'cod' && <Check size={14} className="text-white" />}
             </div>
           </button>
 
-          <motion.button
-            whileTap={{ scale: 0.97 }}
-            onClick={handleFinalOrder}
-            disabled={loading}
-            className="w-full py-5 sm:py-6 rounded-[1.5rem] sm:rounded-[2rem] text-white font-black text-lg sm:text-xl shadow-xl flex justify-center items-center gap-3 transition-all disabled:opacity-70"
-            style={{ 
-              backgroundColor: loading ? "#cbd5e1" : (selectedMethod ? springGreen : "#94a3b8"),
-              cursor: (selectedMethod && !loading) ? 'pointer' : 'not-allowed'
-            }}
-          >
-            {loading ? (
-              <>
-                <Loader2 className="animate-spin" size={20} />
-                <span>PROCESSING...</span>
-              </>
-            ) : "PLACE ORDER NOW"}
-          </motion.button>
+          <div className="flex flex-col gap-3 pt-4 pb-8">
+            <motion.button
+              whileTap={{ scale: 0.98 }}
+              onClick={handleFinalOrder}
+              disabled={loading}
+              className="w-full py-5 sm:py-6 rounded-[2rem] text-white font-black text-lg sm:text-xl shadow-xl flex justify-center items-center gap-3 transition-all"
+              style={{ 
+                backgroundColor: loading ? "#cbd5e1" : (selectedMethod ? springGreen : "#94a3b8"),
+                cursor: selectedMethod ? 'pointer' : 'not-allowed'
+              }}
+            >
+              {loading ? <Loader2 className="animate-spin" /> : "PLACE ORDER NOW"}
+            </motion.button>
+
+            {/* THE CLOSE BUTTON - Fixed to be visible and responsive */}
+            <button 
+              onClick={() => navigate(-1)}
+              className="w-full py-4 text-slate-400 font-bold text-sm hover:text-slate-600 transition-colors uppercase tracking-widest"
+            >
+              Close
+            </button>
+          </div>
         </div>
       </div>
     </div>
