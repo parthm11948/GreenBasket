@@ -40,7 +40,6 @@ const Product = ({ addToCart }) => {
       });
 
       if (response.ok) {
-        // Trigger the parent function (fetchCart in App.jsx) to refresh the cart state
         if (addToCart) await addToCart(); 
         
         setLastAdded(product.name);
@@ -80,7 +79,7 @@ const Product = ({ addToCart }) => {
           <span className="font-black text-lg">₹{product.price}/{product.unit}</span>
           <button 
             onClick={(e) => {
-              e.stopPropagation(); // Prevents opening the modal
+              e.stopPropagation(); 
               handleAddToCart(product, 1);
             }} 
             style={{ background: springGreen }} 
@@ -127,30 +126,43 @@ const Product = ({ addToCart }) => {
         const n = getNutrition(selectedProduct);
         return (
           <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="bg-white rounded-[2rem] max-w-md w-full shadow-2xl overflow-hidden">
-              <div className="h-48"><img src={selectedProduct.img} alt={selectedProduct.name} className="w-full h-full object-cover" /></div>
-              <div className="p-6">
-                <h2 className="text-3xl font-extrabold">{selectedProduct.name}</h2>
-                <p className="text-green-600 font-bold mt-1">₹{selectedProduct.price}/{selectedProduct.unit}</p>
-                <div className="flex justify-between items-center bg-gray-100 rounded-full px-5 py-3 mt-5">
-                  <button onClick={decreaseQty}><Minus /></button>
-                  <span className="font-black text-lg">{quantity}</span>
-                  <button onClick={increaseQty}><Plus /></button>
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }} 
+              animate={{ scale: 1, opacity: 1 }} 
+              className="bg-white rounded-[2rem] max-w-md w-full shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
+            >
+              {/* Scrollable area for modal content */}
+              <div className="overflow-y-auto flex-1 custom-scrollbar">
+                <div className="h-48 sm:h-56">
+                  <img src={selectedProduct.img} alt={selectedProduct.name} className="w-full h-full object-cover" />
                 </div>
-                <div className="grid grid-cols-2 gap-4 mt-6">
-                  <div className="bg-green-50 p-4 rounded-xl text-center">Calories<div className="font-black">{n.calories}</div></div>
-                  <div className="bg-blue-50 p-4 rounded-xl text-center">Protein<div className="font-black">{n.protein}g</div></div>
-                  <div className="bg-orange-50 p-4 rounded-xl text-center">Carbs<div className="font-black">{n.carbs}g</div></div>
-                  <div className="bg-purple-50 p-4 rounded-xl text-center">Vitamins<div className="font-black">{n.vitamins}%</div></div>
-                </div>
-                <div className="bg-green-50 p-4 rounded-xl flex justify-between mt-6">
-                  <span>Total</span>
-                  <span className="font-black text-green-600">₹{(selectedProduct.price * quantity).toFixed(2)}</span>
-                </div>
-                <div className="flex flex-col gap-3 mt-6">
-                   <button onClick={() => handleBuyNow(selectedProduct, quantity)} className="w-full py-4 rounded-xl text-white font-black bg-gradient-to-r from-green-400 to-green-600">⚡ Buy Now</button>
-                   <button onClick={() => { handleAddToCart(selectedProduct, quantity); setSelectedProduct(null); }} style={{ borderColor: springGreen, color: springGreen }} className="w-full py-4 rounded-xl font-black border-2">Add to Basket</button>
-                   <button onClick={() => setSelectedProduct(null)} className="w-full mt-2 text-gray-400 text-sm">Close</button>
+                <div className="p-6">
+                  <h2 className="text-3xl font-extrabold">{selectedProduct.name}</h2>
+                  <p className="text-green-600 font-bold mt-1">₹{selectedProduct.price}/{selectedProduct.unit}</p>
+                  
+                  <div className="flex justify-between items-center bg-gray-100 rounded-full px-5 py-3 mt-5">
+                    <button onClick={decreaseQty} className="p-1 hover:bg-gray-200 rounded-full transition-colors"><Minus size={20} /></button>
+                    <span className="font-black text-lg">{quantity}</span>
+                    <button onClick={increaseQty} className="p-1 hover:bg-gray-200 rounded-full transition-colors"><Plus size={20} /></button>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4 mt-6">
+                    <div className="bg-green-50 p-4 rounded-xl text-center">Calories<div className="font-black">{n.calories}</div></div>
+                    <div className="bg-blue-50 p-4 rounded-xl text-center">Protein<div className="font-black">{n.protein}g</div></div>
+                    <div className="bg-orange-50 p-4 rounded-xl text-center">Carbs<div className="font-black">{n.carbs}g</div></div>
+                    <div className="bg-purple-50 p-4 rounded-xl text-center">Vitamins<div className="font-black">{n.vitamins}%</div></div>
+                  </div>
+
+                  <div className="bg-green-50 p-4 rounded-xl flex justify-between mt-6">
+                    <span>Total</span>
+                    <span className="font-black text-green-600">₹{(selectedProduct.price * quantity).toFixed(2)}</span>
+                  </div>
+
+                  <div className="flex flex-col gap-3 mt-6 pb-2">
+                     <button onClick={() => handleBuyNow(selectedProduct, quantity)} className="w-full py-4 rounded-xl text-white font-black bg-gradient-to-r from-green-400 to-green-600 active:scale-95 transition-transform">⚡ Buy Now</button>
+                     <button onClick={() => { handleAddToCart(selectedProduct, quantity); setSelectedProduct(null); }} style={{ borderColor: springGreen, color: springGreen }} className="w-full py-4 rounded-xl font-black border-2 active:scale-95 transition-transform">Add to Basket</button>
+                     <button onClick={() => setSelectedProduct(null)} className="w-full py-2 text-gray-400 text-sm font-medium hover:text-gray-600 transition-colors">Close</button>
+                  </div>
                 </div>
               </div>
             </motion.div>
