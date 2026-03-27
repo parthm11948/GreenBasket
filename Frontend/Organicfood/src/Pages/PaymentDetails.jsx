@@ -75,7 +75,7 @@ const PaymentDetails = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F4F7F9] flex flex-col items-center p-4 sm:p-6 font-sans text-slate-800">
+    <div className="min-h-screen bg-[#F4F7F9] flex flex-col items-center p-4 sm:p-6 font-sans text-slate-800 overflow-y-auto">
       
       {/* Error Modal */}
       <AnimatePresence>
@@ -88,20 +88,20 @@ const PaymentDetails = () => {
               className="bg-white rounded-[2rem] p-6 sm:p-8 max-w-sm w-full text-center shadow-2xl"
             >
               <AlertCircle size={40} className="mx-auto text-red-500 mb-4" />
-              <h3 className="text-xl font-bold mb-2 text-slate-900">Notice</h3>
+              <h3 className="text-xl font-bold mb-2 text-slate-900">Payment Action Required</h3>
               <p className="text-slate-500 mb-8 text-sm leading-relaxed">{error}</p>
               <button 
                 onClick={() => setError(null)} 
                 className="w-full py-4 bg-[#1A1F2C] text-white font-bold rounded-xl shadow-lg active:scale-95 transition-transform"
               >
-                Close
+                Understood
               </button>
             </motion.div>
           </div>
         )}
       </AnimatePresence>
 
-      <div className="max-w-md w-full flex flex-col min-h-full">
+      <div className="max-w-md w-full relative pb-10"> {/* Added pb-10 to ensure bottom space */}
         {/* Navigation */}
         <button 
           onClick={() => navigate(-1)} 
@@ -149,7 +149,7 @@ const PaymentDetails = () => {
 
               <div className="h-[1px] w-full bg-slate-100 border-dashed border-t border-slate-200"></div>
 
-              <div className="flex justify-between items-center px-2">
+              <div className="flex justify-between items-center px-2 py-2">
                 <span className="text-[10px] font-black text-slate-300 uppercase tracking-[0.2em]">Grand Total</span>
                 <span className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tighter">₹{grandTotal.toFixed(2)}</span>
               </div>
@@ -158,7 +158,7 @@ const PaymentDetails = () => {
         </div>
 
         {/* Payment Selection & Actions */}
-        <div className="space-y-4 mt-auto">
+        <div className="space-y-4">
           <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-2">Select Payment Method</p>
           
           <button
@@ -171,7 +171,7 @@ const PaymentDetails = () => {
           >
             <div className="flex items-center gap-4">
               <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center transition-colors ${
-                selectedMethod === 'cod' ? 'bg-[#31E981] text-white' : 'bg-slate-100 text-slate-400'
+                selectedMethod === 'cod' ? 'bg-[#31E981] text-white shadow-lg shadow-[#31E981]/20' : 'bg-slate-100 text-slate-400'
               }`}>
                 <Truck size={22} />
               </div>
@@ -188,7 +188,7 @@ const PaymentDetails = () => {
             </div>
           </button>
 
-          <div className="flex flex-col gap-3 pt-4 pb-8">
+          <div className="flex flex-col gap-2 pt-4">
             <motion.button
               whileTap={{ scale: 0.98 }}
               onClick={handleFinalOrder}
@@ -202,10 +202,10 @@ const PaymentDetails = () => {
               {loading ? <Loader2 className="animate-spin" /> : "PLACE ORDER NOW"}
             </motion.button>
 
-            {/* THE CLOSE BUTTON - Fixed to be visible and responsive */}
+            {/* THE CLOSE BUTTON - Fixed position & padding */}
             <button 
               onClick={() => navigate(-1)}
-              className="w-full py-4 text-slate-400 font-bold text-sm hover:text-slate-600 transition-colors uppercase tracking-widest"
+              className="w-full py-6 text-slate-400 font-bold text-sm hover:text-slate-600 transition-colors uppercase tracking-widest active:scale-95"
             >
               Close
             </button>
